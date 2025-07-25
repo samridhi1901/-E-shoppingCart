@@ -1,0 +1,32 @@
+<div class="bill-container" *ngFor="let order of orders">
+  <div class="bill-header">
+    <h2>Order Summary</h2>
+    <p>Order ID: {{ order.orderId }}</p>
+    <!-- Uncomment if you have orderDate in your order object -->
+    <!-- <p>Order Date: {{ order.orderDate | date }}</p> -->
+  </div>
+
+  <table class="bill-table">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of orders">
+        <td>{{ product.productName }}</td>
+        <td>{{ product.quantity }}</td>
+        <td>{{ product.totalPrice | currency: 'INR' }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="bill-footer">
+    <p>Total Amount: {{ order.totalPrice| currency: 'INR' }}</p>
+  </div>
+</div>
+
+<div class="bill-header">
+  <p>Your order is successfully placed & will be delivered in 3-5 business days</p>
+</div>

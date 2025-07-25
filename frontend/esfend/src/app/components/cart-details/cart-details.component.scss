@@ -1,0 +1,80 @@
+/* Layout */
+.cart-page {
+  background-color: palevioletred;
+}
+ 
+/* Card Styling */
+.cart-card {
+  border-radius: 12px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+/* Buy Now Button */
+.btn-buy-now {
+  background-color: palevioletred;
+  color: white;
+  border: none;
+  transition: all 0.3s ease;
+}
+ 
+.btn-buy-now:hover {
+  background-color: palevioletred;
+  color: white;
+  box-shadow: 0 4px 0 palevioletred, 0 0 10px rgba(219, 112, 147, 0.4); /* pink line + glow */
+  transform: translateY(-2px);
+}
+ 
+ 
+/* Cart Card Hover Effect */
+.cart-card {
+  border-radius: 12px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+  border: 2px solid transparent; /* default border transparent */
+}
+ 
+.cart-card:hover {
+  transform: translateY(-6px);
+  border: 2px solid palevioletred;
+  box-shadow: 0 0 15px rgba(219, 112, 147, 0.5); /* pink glow */
+}
+ 
+ 
+/* Quantity Buttons */
+.btn-sm.rounded-circle {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  font-size: 14px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+ 
+/* Indigo Theme Colors */
+.text-indigo {
+  color: palevioletred;
+}
+ 
+.btn-indigo {
+  background-color: palevioletred;
+  color: white;
+  border: none;
+}
+ 
+.btn-indigo:hover {
+  background-color: palevioletred;
+  color: white;
+}
+ 
+.btn-outline-indigo {
+  border: 1px solid palevioletred;
+  color: white;
+  background: palevioletred;
+}
+ 
+.btn-outline-indigo:hover {
+  background-color: palevioletred;
+  color: white;
+}
+ 
+ 
+ 

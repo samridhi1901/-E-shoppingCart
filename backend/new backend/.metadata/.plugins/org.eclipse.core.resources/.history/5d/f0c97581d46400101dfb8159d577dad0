@@ -1,0 +1,65 @@
+package com.userdetails.service;
+
+
+import com.login.model.User;
+import com.login.repository.UserRepository;
+import com.login.service.CustomUserDetailsService;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+@ExtendWith(MockitoExtension.class)
+public class CustomUserDetailsServiceTest {
+
+    @Mock
+    private UserRepository userRepository;
+
+    @InjectMocks
+    private CustomUserDetailsService customUserDetailsService;
+
+    private User testUser;
+
+    @BeforeEach
+    public void setUp() {
+        testUser = new User();
+        testUser.setFullName("JohnDoe");
+        testUser.setEmailId("john@example.com");
+        testUser.setPassword("encryptedPassword");
+        testUser.setRole("USER");
+    }
+
+    @Test
+    public void testLoadUserByUsername_Success() {
+        // Simulate user found by full name or email
+        when(userRepository.findByfullNameOrEmailId("john@example.com", "john@example.com"))
+                .thenReturn(testUser);
+
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername("john@example.com");
+
+        assertNotNull(userDetails);
+        assertEquals("john@example.com", userDetails.getUsername());
+        assertEquals("encryptedPassword", userDetails.getPassword());
+        assertTrue(userDetails.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_USER")));
+    }
+
+    @Test
+    public void testLoadUserByUsername_UserNotFound() {
+        // Simulate no user found
+        when(userRepository.findByfullNameOrEmailId("unknown", "unknown")).thenReturn(null);
+
+        assertThrows(UsernameNotFoundException.class, () -> {
+            customUserDetailsService.loadUserByUsername("unknown");
+        });
+    }
+}

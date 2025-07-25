@@ -1,0 +1,68 @@
+package com.cg.estore.orderservice.servicetests;
+
+import com.cg.estore.orderservice.entity.OrderDetail;
+import com.cg.estore.orderservice.repository.OrderRepository;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+
+import java.time.LocalDate;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@DataMongoTest
+@SpringJUnitConfig(classes = OrderRepository.class)
+public class OrderRepositoryTests {
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Test
+    public void testFindFirstByOrderByOrderIdDesc() {
+        // Assuming you have some sample data in the test database
+//        Orders order1 = new Orders("O001", LocalDate.now(), 100.0, "Pending", 2, "Product1", null);
+//        Orders order2 = new Orders("O002", LocalDate.now(), 150.0, "Shipped", 3, "Product2", null);
+        
+//        orderRepository.save(order1);
+//        orderRepository.save(order2);
+
+        // Retrieve the latest order by order ID
+        OrderDetail latestOrder = orderRepository.findFirstByOrderByOrderIdDesc();
+
+        assertNotNull(latestOrder);
+        assertEquals("O002", latestOrder.getOrderId());
+    }
+
+    @Test
+    public void testFindByOrderId() {
+        // Assuming you have some sample data in the test database
+        //Orders order = new Orders("O003", LocalDate.now(), 120.0, "Delivered", 4, "Product3", null);
+      //  orderRepository.save(order);
+
+        // Retrieve the order by order ID
+        Optional<OrderDetail> retrievedOrder = orderRepository.findByorderId("O003");
+
+        assertTrue(retrievedOrder.isPresent());
+        assertEquals("O003", retrievedOrder.get().getOrderId());
+    }
+
+    @Test
+    public void testDeleteByOrderId() {
+        // Assuming you have some sample data in the test database
+//        Orders order = new Orders("O004", LocalDate.now(), 90.0, "Pending", 1, "Product4", null);
+//        orderRepository.save(order);
+//
+//        // Delete the order by order ID
+//        orderRepository.deleteByorderId("O004");
+
+        // Attempt to retrieve the deleted order
+        Optional<OrderDetail> deletedOrder = orderRepository.findByorderId("O004");
+
+        assertFalse(deletedOrder.isPresent());
+    }
+
+    // Additional tests based on repository methods and scenarios
+}

@@ -1,0 +1,96 @@
+package com.cg.estore.cartservice.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.cg.estore.cartservice.entity.Cart;
+import com.cg.estore.cartservice.entity.Product;
+import com.cg.estore.cartservice.exception.CartNotFoundException;
+import com.cg.estore.cartservice.service.CartService;
+
+import java.util.List;
+
+//@CrossOrigin("*") // Allowing cross-origin requests from a specific domain
+@RestController
+@RequestMapping("/carts")
+public class CartController {
+
+    @Autowired
+    private CartService cartService;
+
+    // Add a new cart or add a specific product to an existing cart
+    @PostMapping("addtocart/{productId}/{profileId}/{quantity}")
+    public ResponseEntity<Cart> addCartWithProduct(@PathVariable String productId, @PathVariable String profileId, @PathVariable int quantity) {
+        if (profileId == null || productId == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Return a 400 Bad Request if input is invalid
+        }
+
+        // Add the product to the cart using the service method
+        Cart addedCart = cartService.addProductToCart(productId, profileId, quantity);
+
+        if (addedCart != null) {
+            return new ResponseEntity<>(addedCart, HttpStatus.OK); // Return the updated cart if successful
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Return 404 if the cart or product is not found
+        }
+    }
+
+    // Get all carts
+    @GetMapping("/getallcarts")
+    public ResponseEntity<List<Cart>> getAllCarts() {
+        List<Cart> carts = cartService.getAllCarts();
+        return new ResponseEntity<>(carts, HttpStatus.OK); // Return a list of carts with a 200 OK status
+    }
+
+    // Get a cart by cartId
+    @GetMapping("/getCartById/{cartId}")
+    public ResponseEntity<Cart> getCartById(@PathVariable String cartId) {
+        Cart cart = cartService.getCartById(cartId);
+        if (cart != null) {
+            return new ResponseEntity<>(cart, HttpStatus.OK); // Return the cart with a 200 OK status if found
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Return 404 if the cart is not found
+        }
+    }
+
+    // Update a cart
+//    @PutMapping("/updateCart/{cartId}")
+//    public ResponseEntity<Cart> updateCart(@PathVariable String cartId, @RequestBody Cart cart) {
+//        cart.setCartId(cartId);
+//        Cart updatedCart = cartService.updateCart(cart);
+//        if (updatedCart != null) {
+//            return new ResponseEntity<>(updatedCart, HttpStatus.OK); // Return the updated cart with a 200 OK status if successful
+//        } else {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Return 404 if the cart is not found
+//        }
+//    }
+
+    // Calculate the total price of a cart
+//    @GetMapping("/total/{cartId}")
+//    public ResponseEntity<Double> cartTotal(@PathVariable String cartId) {
+//  
+//        if (cartId != null) {
+//            double total = cartService.cartTotal(cartId);
+//            return new ResponseEntity<>(total, HttpStatus.OK); // Return the total with a 200 OK status if successful
+//        } else {
+//            return new ResponseEntity<>(0.0, HttpStatus.NOT_FOUND); // Return 404 if the cart is not found
+//        }
+//    }
+    
+    @DeleteMapping("/delete/{cartId}")
+    public ResponseEntity<Void> deleteProductFromCart(
+            @PathVariable String cartId) {
+        try {
+            cartService.deleteProductFromCart(cartId);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace(); // 🔍 Log the actual exception
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
+
+}

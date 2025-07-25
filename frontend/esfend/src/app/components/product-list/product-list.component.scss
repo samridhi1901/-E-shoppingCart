@@ -1,0 +1,110 @@
+.main-content {
+  background-color: #f8f9fa; /* Light grey background */
+  padding: 20px;
+}
+ 
+.section-content {
+  padding: 30px 0;
+}
+ 
+.product-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start; /* Align items to start */
+  gap: 15px;
+}
+ 
+.product-card {
+  width: calc(25% - 15px); /* Adjust the width as per your requirement */
+  background-color: #fff;
+  border: 1px solid #e0e0e0; /* Slight border */
+  border-radius: 8px;
+  box-shadow: 0 2px 5px palevioletred; /* Light shadow */
+  text-align: center;
+  padding: 10px; /* Reduced padding */
+  box-sizing: border-box;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 300px; /* Square shape */
+}
+ 
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+ 
+.product-link {
+  text-decoration: none;
+  color: inherit;
+  flex-grow: 1;
+}
+ 
+.product-image {
+  width: 100%;
+  height: 150px; /* Fixed height for square shape */
+  object-fit: contain; /* Ensures the image fits within the area */
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 10px;
+}
+ 
+.product-details {
+  margin-top: 10px;
+}
+ 
+.product-title,
+.product-type,
+.price {
+  margin: 5px 0; /* Reduced margin */
+  color: #333; /* Black color for text */
+  font-weight: 600;
+}
+ 
+.price {
+  color: #333;
+  font-size: 1.1em;
+}
+ 
+.button-container {
+  margin-top: 10px; /* Reduced margin */
+}
+ 
+.btn-product-bottom {
+  background-color: palevioletred; /* Different color for button */
+  color: #fff;
+  border: none;
+  padding: 8px 15px; /* Adjusted padding */
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+ 
+.btn-product-bottom.added-to-cart {
+  background-color: #28a745; /* Green color if product is added to cart */
+}
+ 
+.btn-product-bottom:hover {
+  background-color: purple;
+}
+ 
+.alert-warning {
+  background-color: #ffc107;
+  color: #856404;
+  border: 1px solid #ffeeba;
+}
+ 
+/* Ensure proper spacing and alignment */
+.container-fluid {
+  padding: 0 15px;
+}
+ 
+.row {
+  margin: 0 -15px;
+}
+ 
+.product-container .product-card {
+  margin-bottom: 15px;
+}
+ 
+ 

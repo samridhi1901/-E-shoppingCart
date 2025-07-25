@@ -1,0 +1,107 @@
+package com.cg.estore.orderservice.controllertests;
+ 
+import com.cg.estore.orderservice.controller.OrderController;
+import com.cg.estore.orderservice.entity.OrderDetail;
+import com.cg.estore.orderservice.entity.OrderInput;
+import com.cg.estore.orderservice.entity.TransactionDetails;
+import com.cg.estore.orderservice.serviceImpl.OrderService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MockMvc;
+ 
+import java.util.Arrays;
+ 
+import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+ 
+@ExtendWith(SpringExtension.class)
+@WebMvcTest(OrderController.class)
+class OrderControllerTests {
+ 
+    @Autowired
+    private MockMvc mockMvc;
+ 
+    @MockBean
+    private OrderService orderService;
+ 
+    @Autowired
+    private ObjectMapper objectMapper;
+ 
+    @Test
+    void getAllOrders_shouldReturnListOfOrders() throws Exception {
+        Mockito.when(orderService.getAllOrders()).thenReturn(Arrays.asList(new OrderDetail(), new OrderDetail()));
+ 
+        mockMvc.perform(get("/orders/all"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isNotEmpty());
+    }
+ 
+    @Test
+    void getOrderById_shouldReturnOrder() throws Exception {
+        OrderDetail mockOrder = new OrderDetail();
+        mockOrder.setOrderId((long) 1);
+        Mockito.when(orderService.getOrderById("1")).thenReturn(mockOrder);
+ 
+        mockMvc.perform(get("/orders/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.orderId").value("1"));
+    }
+ 
+    @Test
+    void placeOrder_shouldReturnOrderDetail() throws Exception {
+        OrderInput input = new OrderInput(); // populate with dummy data as needed
+        OrderDetail orderDetail = new OrderDetail();
+        orderDetail.setOrderId((long) 123);
+ 
+        Mockito.when(orderService.placeOrder(any(OrderDetail.class))).thenReturn(orderDetail);
+ 
+        mockMvc.perform(post("/orders/placeOrder")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(input)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.orderId").value("123"));
+    }
+ 
+    @Test
+    void deleteOrder_withValidOrderId_shouldReturnNoContent() throws Exception {
+        Mockito.doNothing().when(orderService).deleteOrderById("1");
+ 
+        mockMvc.perform(delete("/orders/1"))
+                .andExpect(status().isNoContent());
+    }
+ 
+    @Test
+    void getOrderByProfileId_shouldReturnOrder() throws Exception {
+        OrderDetail orderDetail = new OrderDetail();
+        orderDetail.setOrderId((long) 1);
+        Mockito.when(orderService.getOrderByProfileId("profile123")).thenReturn(orderDetail);
+ 
+        mockMvc.perform(get("/orders/user/profile123"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.orderId").value("1"));
+    }
+ 
+    @Test
+    void createTransaction_shouldReturnTransactionDetails() throws Exception {
+        TransactionDetails transactionDetails = new TransactionDetails();
+        transactionDetails.setAmount(250);
+ 
+        Mockito.when(orderService.createTransaction(250.0)).thenReturn(transactionDetails);
+ 
+        mockMvc.perform(post("/orders/createTransaction/250.0"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.amount").value(250.0));
+    }
+ 
+}
+ 
+ 

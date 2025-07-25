@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estore Landing Page</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+/>
+  <link rel="stylesheet" href="landing.component.css">
+</head>
+<body>
+  <!-- <header class="header">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center py-3">
+        <div class="logo">Estore</div>
+        <nav class="nav ml-auto">
+          <a href="#" class="nav-link">Home</a>
+          <a href="#about" class="nav-link">About Us</a>
+          <a href="#" class="nav-link">Products</a>
+          <a href="login" class="nav-link">
+            <i class="material-icons">login</i> Login
+          </a>
+          <a href="signup" class="nav-link">
+            <i class="material-icons">person_add</i> SignUp
+          </a>
+        </nav>
+      </div>
+    </div>
+  </header> -->
+  <header class="header">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center py-3">
+        <div class="logo">EShop</div>
+        <nav class="nav ml-auto">
+          <a href="login" class="nav-link">
+            <i class="fas fa-sign-in-alt"></i> Login
+          </a>
+          <a href="signup" class="nav-link">
+            <i class="fas fa-user-plus"></i> SignUp
+          </a>
+        </nav>
+      </div>
+    </div>
+  </header>
+ 
+  <!-- Carousel -->
+  <!-- <div class="carousel-container">
+    <carousel>
+      <slide *ngFor="let slide of slides">
+        <img [src]="slide.image" alt="Carousel image" class="d-block w-100">
+      </slide>
+    </carousel>
+  </div> -->
+ 
+  <div class="section">
+    <!-- container -->
+    <div class="container">
+      <!-- row -->
+      <div class="row">
+        <!-- shop -->
+        <div class="col-md-4 col-xs-6">
+          <div class="shop">
+            <div class="shop-img">
+              <img src="https://www.pixelstalk.net/wp-content/uploads/2016/05/Laptop-Wallpaers-HD.jpg" alt="">
+            </div>
+            <div class="shop-body">
+              <h3>Laptop<br>Collection</h3>
+              <a href="login" class="cta-btn">Shop now <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+        </div>
+        <!-- /shop -->
+ 
+        <!-- shop -->
+        <div class="col-md-4 col-xs-6">
+          <div class="shop">
+            <div class="shop-img">
+              <img src="https://visualeducation.com/wp-content/uploads/2020/09/Fashion-accessories-unretouched.jpg" alt="Accessories">
+            </div>
+            <div class="shop-body">
+              <h3>Accessories<br>Collection</h3>
+              <a href="login" class="cta-btn">Shop now <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+        </div>
+        <!-- /shop -->
+ 
+        <!-- shop -->
+        <div class="col-md-4 col-xs-6">
+          <div class="shop">
+            <div class="shop-img">
+              <img src="https://th.bing.com/th/id/OIP.YiHkytDqjNSC_BpfqrYmrAHaEK?w=321&h=180&c=7&r=0&o=5&dpr=1.1&pid=1.7" alt="Cameras">
+            </div>
+            <div class="shop-body">
+              <h3>Cameras<br>Collection</h3>
+              <a href="login" class="cta-btn">Shop now <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+        </div>
+        <!-- /shop -->
+      </div>
+      <!-- /row -->
+    </div>
+    <!-- /container -->
+  </div>
+ 
+  <div id="hot-deal" class="section hot-deal-section">
+    <!-- container -->
+    <div class="container">
+      <!-- row -->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="hot-deal">
+            <ul class="hot-deal-countdown">
+              <li>
+                <div>
+                  <h3>02</h3>
+                  <span>Days</span>
+                </div>
+              </li>
+              <li>
+                <div>
+                  <h3>10</h3>
+                  <span>Hours</span>
+                </div>
+              </li>
+              <li>
+                <div>
+                  <h3>34</h3>
+                  <span>Mins</span>
+                </div>
+              </li>
+              <li>
+                <div>
+                  <h3>60</h3>
+                  <span>Secs</span>
+                </div>
+              </li>
+            </ul>
+            <img src="https://static.vecteezy.com/system/resources/previews/003/240/364/original/shopping-online-on-phone-paper-art-modern-pink-background-gifts-box-free-vector.jpg" alt="Hot Deal Image" class="hot-deal-image">
+            <h2 class="text-uppercase">hot deal this week</h2>
+            <p>New Collection Up to 50% OFF</p>
+            <a class="primary-btn cta-btn" href="login">Shop now</a>
+          </div>
+        </div>
+      </div>
+      <!-- /row -->
+    </div>
+    <!-- /container -->
+  </div>
+ 
+  <!-- Category Section -->
+  <div class="container category-section my-5">
+    <h2 class="text-center mb-4">Explore Our Categories</h2>
+    <div class="row">
+      <div class="col-md-3 col-sm-6 text-center mb-4">
+        <img src="https://thumbs.dreamstime.com/b/many-used-modern-electronic-gadgets-use-white-floor-reuse-recycle-concept-top-view-153892434.jpg" class="rounded-circle category-image mb-2" alt="Electronics & Gadgets">
+        <h4>Electronics & Gadgets</h4>
+      </div>
+      <div class="col-md-3 col-sm-6 text-center mb-4">
+        <img src="https://thumbs.dreamstime.com/z/collage-spring-women-s-clothing-accessories-pink-background-women-s-clothing-accessories-115737671.jpg" class="rounded-circle category-image mb-2" alt="Clothes & Accessories">
+        <h4>Clothes & Accessories</h4>
+      </div>
+      <div class="col-md-3 col-sm-6 text-center mb-4">
+        <img src="https://media.allure.com/photos/5e9f44d3286b260008a65be5/16:9/w_2560,c_limit/reporter-wild-beauty-social.jpg" class="rounded-circle category-image mb-2" alt="Health & Beauty">
+        <h4>Health & Beauty</h4>
+      </div>
+      <div class="col-md-3 col-sm-6 text-center mb-4">
+        <img src="https://media.theeverygirl.com/wp-content/uploads/2023/02/the-everygirl-feature-beauty-products-that-are-worth-it.jpg" class="rounded-circle category-image mb-2" alt="Viral Products">
+        <h4>Viral Products</h4>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- Feature Icons Section -->
+  <section class="feature-icons py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3 col-sm-6 text-center mb-4">
+          <div class="feature-box">
+            <i class="material-icons">add_shopping_cart</i>
+            <h4>Free Shipping</h4>
+            <p>National and international shipping</p>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6 text-center mb-4">
+          <div class="feature-box">
+            <i class="material-icons">account_circle</i>
+            <h4>Buy Instantly</h4>
+            <p>Just Signup</p>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6 text-center mb-4">
+          <div class="feature-box">
+            <i class="material-icons">verified_user</i>
+            <h4>24/7 Support</h4>
+            <p>Dedicated Support Team</p>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6 text-center mb-4">
+          <div class="feature-box">
+            <i class="material-icons">payment</i>
+            <h4>Secure Payment Methods</h4>
+            <p>100% secure payments</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <div class="socialmedia">
+    <ul>
+      <li>
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+      </li>
+      <li>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+      </li>
+      <li>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+      </li>
+      <li>
+        <a href="#"><i class="fab fa-pinterest-p"></i></a>
+      </li>
+    </ul>
+  </div>
+ 
+  <footer class="text-center py-3">
+    &copy; <span id="year"></span> Estore.
+  </footer>
+ 
+  <!-- Include Angular and Material components -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
+ 
+ 
+ 

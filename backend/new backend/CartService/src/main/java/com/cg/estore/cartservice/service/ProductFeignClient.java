@@ -1,0 +1,33 @@
+package com.cg.estore.cartservice.service;
+
+import java.util.List;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.*;
+
+import com.cg.estore.cartservice.entity.Product;
+
+@FeignClient(url="http://localhost:9006/products", name="product-service")
+public interface ProductFeignClient {
+
+    @GetMapping("/getProduct/{id}")
+    Product getProductById(@PathVariable("id") String id);
+
+    @PostMapping("/products")
+    Product createProduct(@RequestBody Product product);
+
+    @PutMapping("/products/{id}")
+    Product updateProduct(@PathVariable("id") String id, @RequestBody Product product);
+
+    @DeleteMapping("/products/{id}")
+    void deleteProduct(@PathVariable("id") String id);
+
+    @GetMapping("/products")
+    List<Product> getAllProducts();
+    
+    @PutMapping("/{productId}/{quantity}")
+    void updateProductQuantity(@PathVariable("productId") String productId, @RequestParam("quantity") int quantity);
+
+
+	
+}

@@ -1,0 +1,75 @@
+package com.cg.estore.cartservice.servicetests;
+
+import com.cg.estore.cartservice.entity.Cart;
+import com.cg.estore.cartservice.repository.CartRepository;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@DataMongoTest
+public class CartRepositoryTest {
+
+    @Autowired
+    private CartRepository cartRepository;
+
+    @Test
+    public void testSaveCart() {
+        // Arrange
+        Cart cart = new Cart();
+        cart.setProductId("p1");
+        cart.setTotalPrice(100.0);
+        cart.setProductName("Product 1");
+        cart.setQuantity(2);
+
+        // Act
+        Cart savedCart = cartRepository.save(cart);
+
+        // Assert
+        assertNotNull(savedCart.getCartId());
+        assertEquals(cart.getProductId(), savedCart.getProductId());
+        assertEquals(cart.getTotalPrice(), savedCart.getTotalPrice());
+        assertEquals(cart.getProductName(), savedCart.getProductName());
+        assertEquals(cart.getQuantity(), savedCart.getQuantity());
+    }
+
+    @Test
+    public void testFindCartByCartId() {
+        // Arrange
+        Cart cart = new Cart();
+        cart.setProductId("p2");
+        cart.setTotalPrice(150.0);
+        cart.setProductName("Product 2");
+        cart.setQuantity(3);
+
+        Cart savedCart = cartRepository.save(cart);
+
+        // Act
+        Optional<Cart> foundCartOptional = cartRepository.findById(savedCart.getCartId());
+
+        // Assert
+        assertTrue(foundCartOptional.isPresent());
+        Cart foundCart = foundCartOptional.get();
+        assertEquals(savedCart.getCartId(), foundCart.getCartId());
+        assertEquals(savedCart.getProductId(), foundCart.getProductId());
+        assertEquals(savedCart.getTotalPrice(), foundCart.getTotalPrice());
+        assertEquals(savedCart.getProductName(), foundCart.getProductName());
+        assertEquals(savedCart.getQuantity(), foundCart.getQuantity());
+    }
+
+    @Test
+    public void testFindByCartIdNotFound() {
+        // Act
+        Optional<Cart> foundCartOptional = cartRepository.findById("nonexistentId");
+
+        // Assert
+        assertTrue(foundCartOptional.isEmpty());
+    }
+
+    // Additional test cases can be added as needed
+}

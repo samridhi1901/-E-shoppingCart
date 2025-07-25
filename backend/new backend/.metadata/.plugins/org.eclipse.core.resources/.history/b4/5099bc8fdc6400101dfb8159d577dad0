@@ -1,0 +1,168 @@
+package com.cg.estore.producservice.controllertests;
+
+import com.cg.estore.productservice.controller.ProductController;
+import com.cg.estore.productservice.entity.Product;
+import com.cg.estore.productservice.exception.ProductNotFoundException;
+import com.cg.estore.productservice.service.ProductService;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+public class ProductControllerTest {
+
+    @Mock
+    private ProductService productService;
+
+    @InjectMocks
+    private ProductController productController;
+
+    @Test
+    void addProduct() {
+        Product product = new Product();
+        when(productService.addProduct(any(Product.class))).thenReturn(product);
+
+        ResponseEntity<Product> response = productController.addProduct(product);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(product, response.getBody());
+        verify(productService, times(1)).addProduct(product);
+    }
+
+    @Test
+    void getAllProducts_Success() {
+        List<Product> products = List.of(new Product(), new Product());
+        when(productService.getAllProducts()).thenReturn(products);
+
+        ResponseEntity<List<Product>> response = productController.getAllProducts();
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(2, response.getBody().size());
+        verify(productService, times(1)).getAllProducts();
+    }
+
+    @Test
+    void getAllProducts_ThrowsProductNotFoundException() {
+        when(productService.getAllProducts()).thenThrow(new ProductNotFoundException("No products found"));
+
+        ResponseEntity<List<Product>> response = productController.getAllProducts();
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertTrue(response.getBody().isEmpty());
+    }
+
+    @Test
+    void getProductById_Success() {
+        Product product = new Product();
+        when(productService.getProductById("1")).thenReturn(Optional.of(product));
+
+        ResponseEntity<Product> response = productController.getProductById("1");
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(product, response.getBody());
+        verify(productService, times(1)).getProductById("1");
+    }
+
+    @Test
+    void getProductById_NotFound() {
+        when(productService.getProductById("1")).thenReturn(Optional.empty());
+
+        assertThrows(ProductNotFoundException.class, () -> productController.getProductById("1"));
+    }
+
+    @Test
+    void getProductByName_Success() {
+        Product product = new Product();
+        when(productService.getProductByName("Phone")).thenReturn(Optional.of(product));
+
+        ResponseEntity<Optional<Product>> response = productController.getProductByName("Phone");
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertTrue(response.getBody().isPresent());
+        verify(productService, times(1)).getProductByName("Phone");
+    }
+
+    @Test
+    void getProductByName_NotFound() {
+        when(productService.getProductByName("Phone")).thenReturn(Optional.empty());
+
+        assertThrows(ProductNotFoundException.class, () -> productController.getProductByName("Phone"));
+    }
+
+    @Test
+    void updateProduct() {
+        Product product = new Product();
+        when(productService.updateProduct(any(Product.class))).thenReturn(product);
+
+        ResponseEntity<Product> response = productController.updateProduct(product);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(product, response.getBody());
+        verify(productService, times(1)).updateProduct(product);
+    }
+
+    @Test
+    void deleteProductById() {
+        doNothing().when(productService).deleteProductById("1");
+
+        ResponseEntity<Void> response = productController.deleteProductById("1");
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        verify(productService, times(1)).deleteProductById("1");
+    }
+
+    @Test
+    void getProductsByCategory() {
+        List<Product> products = List.of(new Product());
+        when(productService.getProductsByCategory("Electronics")).thenReturn(products);
+
+        ResponseEntity<List<Product>> response = productController.getProductsByCategory("Electronics");
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(products, response.getBody());
+        verify(productService, times(1)).getProductsByCategory("Electronics");
+    }
+
+    @Test
+    void getProductsByType() {
+        List<Product> products = List.of(new Product());
+        when(productService.getProductsByType("Mobile")).thenReturn(products);
+
+        ResponseEntity<List<Product>> response = productController.getProductsByType("Mobile");
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(products, response.getBody());
+        verify(productService, times(1)).getProductsByType("Mobile");
+    }
+
+    @Test
+    void updateProductQuantity() {
+        doNothing().when(productService).updateProductQuantity("1", 5);
+
+        productController.updateProductQuantity("1", 5);
+
+        verify(productService, times(1)).updateProductQuantity("1", 5);
+    }
+
+    @Test
+    void getCategories() {
+        String[] categories = new String[] {"Electronics", "Books"};
+        when(productService.getCategories()).thenReturn(categories);
+
+        String[] result = productController.getCategories();
+
+        assertArrayEquals(categories, result);
+        verify(productService, times(1)).getCategories();
+    }
+}

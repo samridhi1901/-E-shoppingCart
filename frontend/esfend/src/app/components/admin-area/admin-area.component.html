@@ -1,0 +1,26 @@
+
+
+ 
+ 
+   <div class="admin-dashboard">
+    <header>
+      <div class="header-content">
+        <h3>Admin Dashboard</h3>
+        <div class="logout-container">
+        <button (click)="logOut()" class="logout-button"><i class="fas fa-sign-out-alt"></i>Logout</button>
+      </div>
+      </div>
+    </header>
+    <aside>
+      <nav>
+        <ul>
+          <li><a routerLink="/admin/product-manage" routerLinkActive="active">Manage Products</a></li>
+          <li><a routerLink="/admin/orders-manage" routerLinkActive="active">View Orders</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <main>
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+ 

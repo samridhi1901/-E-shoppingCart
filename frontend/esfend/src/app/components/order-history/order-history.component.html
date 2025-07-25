@@ -1,0 +1,32 @@
+<div *ngIf="orders!==null">
+  <h2>Order Details</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Order ID</th>
+        <th>Total Price</th>
+        <th>Status</th>
+        <th>Product Name</th>
+        <th>Quantity</th>
+        <th>Contact Number</th>
+        <th>Full Address</th>
+        <th>Transaction ID</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let order of orders">
+        <td>{{ order.orderId }}</td>
+        <td>{{ order.totalPrice | currency :"INR" }}</td>
+        <td>{{ order.orderStatus }}</td>
+        <td>{{ order.productName }}</td>
+        <td>{{ order.quantity }}</td>
+        <td>{{ order.contactNumber }}</td>
+        <td>{{ order.fulladdress }}</td>
+        <td>{{ order.transactionId }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div *ngIf="orders===null" class="alert alert-warning">
+  No order details found.
+</div>

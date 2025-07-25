@@ -1,0 +1,106 @@
+package com.login.security;
+
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.login.controller.UserController;
+import com.login.dto.AuthDto;
+import com.login.exception.*;
+import com.login.model.User;
+import com.login.service.UserServiceImpl;
+
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@WebMvcTest(UserController.class)
+public class GlobalExceptionHandlerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private UserServiceImpl userService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Test
+    void testUserNotFoundException() throws Exception {
+        Mockito.when(userService.getByProfileId("xyz"))
+               .thenThrow(new UserNotFoundException("User not found"));
+
+        mockMvc.perform(get("/profiles/getUser/xyz"))
+               .andExpect(status().isNotFound())
+               .andExpect(jsonPath("$.status").value("NOT_FOUND"))
+               .andExpect(jsonPath("$.message").value("User not found"));
+    }
+
+    @Test
+    void testUserAlreadyPresentException() throws Exception {
+        User user = new User();
+        user.setEmailId("existing@example.com");
+
+        Mockito.when(userService.registerUser(any(User.class)))
+               .thenThrow(new UserAlreadyPresentException("User already exists"));
+
+        mockMvc.perform(post("/profiles/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(user)))
+               .andExpect(status().isConflict())
+               .andExpect(jsonPath("$.status").value("CONFLICT"))
+               .andExpect(jsonPath("$.message").value("User already exists"));
+    }
+
+    @Test
+    void testInvalidCredentialException() throws Exception {
+        AuthDto auth = new AuthDto();
+        auth.setEmail("test@example.com");
+        auth.setPassword("wrongpassword");
+
+        Mockito.when(userService.login(any(AuthDto.class)))
+               .thenThrow(new InvalidCredentialException("Invalid credentials"));
+
+        mockMvc.perform(post("/profiles/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(auth)))
+               .andExpect(status().isBadRequest())
+               .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+               .andExpect(jsonPath("$.message").value("Invalid credentials"));
+    }
+
+    @Test
+    void testValidationException() throws Exception {
+        // Missing required fields (e.g., emailId) in User
+        String userJson = "{}";
+
+        mockMvc.perform(post("/profiles/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(userJson))
+               .andExpect(status().isBadRequest())
+               .andExpect(jsonPath("$.emailId").exists());
+    }
+
+    @Test
+    void testGenericException() throws Exception {
+        Mockito.when(userService.getByProfileId("any"))
+               .thenThrow(new RuntimeException("Unexpected error"));
+
+        mockMvc.perform(get("/profiles/getUser/any"))
+               .andExpect(status().isBadRequest())
+               .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+               .andExpect(jsonPath("$.message").value("Unexpected error"));
+    }
+}

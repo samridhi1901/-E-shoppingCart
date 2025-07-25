@@ -1,0 +1,153 @@
+package com.cg.estore.orderservice.servicetests;
+
+import com.cg.estore.orderservice.entity.*;
+import com.cg.estore.orderservice.repository.OrderRepository;
+import com.cg.estore.orderservice.serviceImpl.OrderServiceImpl;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+class OrderServiceImplTests {
+
+    @Mock
+    private OrderRepository orderRepository;
+
+    @Mock
+    private CartFeignClient cartFeignClient;
+
+    @Mock
+    private ProductFeignClient productFeignClient;
+
+    @Mock
+    private UserFeignClient userFeignClient;
+
+    @InjectMocks
+    private OrderServiceImpl orderService;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    void testGetAllOrders() {
+        List<OrderDetail> mockOrders = Arrays.asList(new OrderDetail(), new OrderDetail());
+        when(orderRepository.findAll()).thenReturn(mockOrders);
+
+        List<OrderDetail> result = orderService.getAllOrders();
+
+        assertEquals(mockOrders.size(), result.size());
+        verify(orderRepository, times(1)).findAll();
+    }
+
+    @Test
+    void testPlaceOrder() {
+        OrderDetail input = new OrderDetail();
+        input.setProductName("Product1");
+        input.setQuantity(2);
+        input.setFullName("John Doe");
+        input.setContactNumber("1234567890");
+        input.setFulladdress("123 Street");
+        input.setTransactionId("txn001");
+        input.setCartId("cart001");
+
+        User mockUser = new User();
+        mockUser.setProfileId("profile123");
+
+        Product mockProduct = new Product();
+        mockProduct.setProductId("P001");
+        mockProduct.setProductName("Product1");
+        mockProduct.setTotalPrice(100.0);
+
+        // userFeignClient returns user by fullName
+        when(userFeignClient.getProfileByFullName("John Doe")).thenReturn(mockUser);
+
+        // productFeignClient returns a list of products by name
+        when(productFeignClient.getProductsByName("Product1")).thenReturn(Collections.singletonList(mockProduct));
+
+        // Expected price: product price * quantity = 100 * 2 = 200
+        OrderDetail expectedOrder = new OrderDetail(
+                200.0,
+                "ORDER PLACED",
+                "Product1",
+                2,
+                "1234567890",
+                "123 Street",
+                "profile123",
+                "cart001",
+                "txn001",
+                "John Doe"
+        );
+
+        when(orderRepository.save(any(OrderDetail.class))).thenReturn(expectedOrder);
+
+        OrderDetail result = orderService.placeOrder(input);
+
+        assertNotNull(result);
+        assertEquals("Product1", result.getProductName());
+        assertEquals(2, result.getQuantity());
+        assertEquals(200.0, result.getTotalPrice());
+        assertEquals("profile123", result.getProfileId());
+
+        verify(orderRepository, times(1)).save(any(OrderDetail.class));
+        verify(userFeignClient).getProfileByFullName("John Doe");
+        verify(productFeignClient).getProductsByName("Product1");
+    }
+
+    @Test
+    void testGetOrderById() {
+        Long orderId = 123L; // use Long
+        OrderDetail mockOrder = new OrderDetail();
+        mockOrder.setOrderId(orderId);
+
+        when(orderRepository.findById(orderId)).thenReturn(Optional.of(mockOrder));
+
+        OrderDetail result = orderService.getOrderById(orderId.toString()); // your service expects String - fix below
+
+        assertNotNull(result);
+        assertEquals(orderId, result.getOrderId());
+        verify(orderRepository).findById(orderId);
+    }
+
+    @Test
+    void testGetOrderByIdWithInvalidId() {
+        Long orderId = 999L;
+        when(orderRepository.findById(orderId)).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            orderService.getOrderById(orderId.toString());
+        });
+
+        assertTrue(exception.getMessage().contains("Order not found"));
+    }
+
+    @Test
+    void testDeleteOrderByIdWhenExists() {
+        Long orderId = 123L;
+        when(orderRepository.existsById(orderId)).thenReturn(true);
+
+        orderService.deleteOrderById(orderId.toString());
+
+        verify(orderRepository).deleteById(orderId);
+    }
+
+    @Test
+    void testDeleteOrderByIdWhenNotExists() {
+        Long orderId = 999L;
+        when(orderRepository.existsById(orderId)).thenReturn(false);
+
+        assertThrows(RuntimeException.class, () -> {
+            orderService.deleteOrderById(orderId.toString());
+        });
+
+        verify(orderRepository, never()).deleteById(any());
+    }
+}

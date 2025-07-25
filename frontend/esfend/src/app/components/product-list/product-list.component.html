@@ -1,0 +1,36 @@
+<div class="main-content">
+  <div class="section-content section-content-p30">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="product-container">
+          <div *ngFor="let product of productsToDisplay; let i = index" class="product-card">
+            <!-- <a [routerLink]="'/products/' + product.productId">
+              <img [src]="product.image" alt="{{ product.productName }}" class="product-image" />
+              <div class="product-title">{{ product.productName }}</div>
+              <div class="product-type">{{ product.productType }}</div>
+              <div class="price">{{ product.totalPrice | currency: 'INR' }}</div>
+            </a> -->
+            <img [src]="product.image" alt="{{ product.productName }}" class="product-image" />
+            <div class="product-title">{{ product.productName }}</div>
+            <div class="product-type">{{ product.productType }}</div>
+            <div class="price">{{ product.totalPrice | currency: 'INR' }}</div>
+            <div class="button-container">
+              <button
+                (click)="addToCart(product, i)"
+                class="btn-product-bottom"
+                [ngClass]="{'added-to-cart': inCart[i]}">
+                {{ inCart[i] ? 'Go to Cart' : 'Add to Cart' }}
+              </button>
+            </div>
+ 
+            <div *ngIf="productsToDisplay?.length === 0" class="alert alert-warning col-md-12" role="alert">
+              No products found.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+ 

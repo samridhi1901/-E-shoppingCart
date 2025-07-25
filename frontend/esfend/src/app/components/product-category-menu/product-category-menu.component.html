@@ -1,0 +1,28 @@
+<!-- <div class="menu-sidebar-content js-scrollbar1">
+  <nav class="navbar-sidebar">
+    <ul class="list-unstyled navbar-list">
+      <li *ngFor="let category of productCategories ">
+        <button (click)="filterProducts(category)">{{category}}</button>
+     
+      </li>
+    </ul>
+  </nav>
+</div> -->
+<!-- HTML Structure -->
+<div class="menu-sidebar-content js-scrollbar1">
+  <nav class="navbar-sidebar">
+    <ul class="list-unstyled navbar-list">
+      <li *ngFor="let category of productCategories">
+        <button class="category-btn" (click)="filterProducts(category)">{{ category }}</button>
+      </li>
+    </ul>
+  </nav>
+</div>
+ 
+ 
+<!-- <a
+  routerLink="/category/{{ category }}"
+  routerLinkActive="router-link-active"
+  >{{ category }}</a
+> -->
+ 

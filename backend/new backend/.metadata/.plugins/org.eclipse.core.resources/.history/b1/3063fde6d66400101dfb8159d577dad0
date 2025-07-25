@@ -1,0 +1,99 @@
+package com.loginuserController;
+
+import com.login.controller.UserController;
+import com.login.dto.AuthDto;
+import com.login.dto.userDto;
+import com.login.exception.UserAlreadyPresentException;
+import com.login.model.User;
+import com.login.security.Jwtutil;
+import com.login.service.UserServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.*;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.util.*;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+@WebMvcTest(UserController.class)
+public class UserControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private UserServiceImpl userService;
+
+    @MockBean
+    private Jwtutil jwtutil;
+
+    @MockBean
+    private BCryptPasswordEncoder encoder;
+
+    @InjectMocks
+    private UserController userController;
+
+    private ObjectMapper objectMapper;
+
+    @BeforeEach
+    public void setup() {
+        objectMapper = new ObjectMapper();
+        mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
+    }
+
+    @Test
+    public void testRegisterUser_Success() throws Exception {
+        User user = new User();
+        user.setEmailId("test@example.com");
+        user.setFullName("Test User");
+        user.setPassword("password");
+
+        when(userService.genrateUniqueRandomId()).thenReturn("123456");
+        when(userService.registerUser(any(User.class))).thenReturn(true);
+
+        mockMvc.perform(post("/profiles/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(user)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.message").value("User registered successfully"))
+                .andExpect(jsonPath("$.emailId").value("test@example.com"));
+    }
+
+    @Test
+    public void testLoginUser_Success() throws Exception {
+        AuthDto authDto = new AuthDto();
+        authDto.setEmail("test@example.com");
+        authDto.setPassword("password");
+
+        userDto responseDto = new userDto();
+        responseDto.setAccessToken("jwtToken");
+        responseDto.setUsername("Test User");
+        responseDto.setUserId("123456");
+        responseDto.setRole("USER");
+
+        when(encoder.encode("password")).thenReturn("encodedPassword");
+        when(userService.login(any(AuthDto.class))).thenReturn(responseDto);
+
+        mockMvc.perform(post("/profiles/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(authDto)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.Message").value("Login successful"))
+                .andExpect(jsonPath("$.Token").value("jwtToken"))
+                .andExpect(jsonPath("$.username").value("Test User"));
+    }
+
+    // Add more tests for GET /all, GET /getUser/{profileId}, DELETE, etc.
+}

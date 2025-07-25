@@ -1,0 +1,5 @@
+package com.login.configuration;
+
+public class SecurityConfigTest {
+
+}

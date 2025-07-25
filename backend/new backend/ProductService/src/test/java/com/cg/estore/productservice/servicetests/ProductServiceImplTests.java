@@ -1,0 +1,116 @@
+package com.cg.estore.productservice.servicetests;
+
+
+
+import com.cg.estore.productservice.entity.Product;
+import com.cg.estore.productservice.repository.ProductRepository;
+import com.cg.estore.productservice.service.ProductService;
+import com.cg.estore.productservice.service.ProductServiceImpl;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+@SpringBootTest
+public class ProductServiceImplTests {
+
+    @InjectMocks
+    private ProductServiceImpl productService;
+
+    @Mock
+    private ProductRepository productRepository;
+
+    @BeforeEach
+    public void setUp() {
+        // Reset mocks before each test
+        Mockito.reset(productRepository);
+    }
+
+    @Test
+    public void testAddProduct() {
+        Product product = new Product();
+        Mockito.when(productRepository.save(product)).thenReturn(product);
+
+        Product addedProduct = productService.addProduct(product);
+        assertNotNull(addedProduct);
+    }
+
+    @Test
+    public void testGetAllProducts() {
+        List<Product> products = new ArrayList<>();
+        products.add(new Product());
+        products.add(new Product());
+        Mockito.when(productRepository.findAll()).thenReturn(products);
+
+        List<Product> retrievedProducts = productService.getAllProducts();
+        assertNotNull(retrievedProducts);
+        assertEquals(2, retrievedProducts.size());
+    }
+
+    
+
+    @Test
+    public void testGetProductByName() {
+        String productName = "Sample Product";
+        Product product = new Product();
+        Mockito.when(productRepository.findByProductName(productName));
+
+        List<Product> retrievedProduct = productService.getProductsByName(productName);
+        assertNotNull(retrievedProduct);
+        assertEquals(product, retrievedProduct);
+    }
+
+    @Test
+    public void testUpdateProduct() {
+        Product product = new Product();
+        Mockito.when(productRepository.save(product)).thenReturn(product);
+
+        Product updatedProduct = productService.updateProduct(product);
+        assertNotNull(updatedProduct);
+    }
+
+    @Test
+    public void testDeleteProductById() {
+        String productId = "1";
+        productService.deleteProductById(productId);
+
+        // Verify that the productRepository.deleteByProductId method was called
+        Mockito.verify(productRepository).deleteByProductId(productId);
+    }
+
+    @Test
+    public void testGetProductsByCategory() {
+        String category = "Electronics";
+        List<Product> products = new ArrayList<>();
+        products.add(new Product());
+        products.add(new Product());
+        Mockito.when(productRepository.findByCategory(category)).thenReturn(products);
+
+        List<Product> retrievedProducts = productService.getProductsByCategory(category);
+        assertNotNull(retrievedProducts);
+        assertEquals(2, retrievedProducts.size());
+    }
+
+    @Test
+    public void testGetProductsByType() {
+        String productType = "Mobile";
+        List<Product> products = new ArrayList<>();
+        products.add(new Product());
+        products.add(new Product());
+        Mockito.when(productRepository.findByProductType(productType)).thenReturn(products);
+
+        List<Product> retrievedProducts = productService.getProductsByType(productType);
+        assertNotNull(retrievedProducts);
+        assertEquals(2, retrievedProducts.size());
+    }
+}

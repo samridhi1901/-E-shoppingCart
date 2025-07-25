@@ -1,0 +1,34 @@
+package com.cg.estore.orderservice.repository;
+
+import java.math.BigInteger;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.cg.estore.orderservice.entity.OrderDetail;
+
+
+@Repository
+public interface OrderRepository extends JpaRepository<OrderDetail, String> {
+
+//	    List<Orders> findBycustomerID(String customerID);
+
+	    OrderDetail findFirstByOrderByOrderIdDesc();
+
+		Optional<OrderDetail> findByorderId(Long orderId);
+
+		void deleteByorderId(Long orderId);
+
+		//Optional<Orders> findByorderId(int orderId);
+        OrderDetail findOrderByProfileId(String profileId);
+
+		Optional<OrderDetail> findByOrderId(Long orderId);
+
+		void deleteByOrderId(Long orderId);
+	    
+	}
+
+

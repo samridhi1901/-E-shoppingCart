@@ -1,0 +1,33 @@
+package com.cg.estore.orderservice.serviceImpl;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.*;
+
+import com.cg.estore.orderservice.entity.Cart;
+
+import java.util.List;
+
+@FeignClient(url="http://localhost:9012/carts", name="CART-SERVICE")
+public interface CartFeignClient {
+	
+    @GetMapping("/getCartById/{cartId}")
+    public Cart getCartById(@PathVariable("cartId") String cartId);
+
+    @PostMapping("/{cartId}/clear")
+    void clearCart(@PathVariable("cartId") String cartId);
+
+
+    @DeleteMapping("/{cartId}/removeItem/{productId}")
+    void removeItemFromCart(@PathVariable("cartId") String cartId, @PathVariable("productId") String productId);
+
+    @PostMapping("/{cartId}/checkout")
+    void checkoutCart(@PathVariable("cartId") String cartId);
+
+    
+
+//	void clearCart(int cartId);
+
+//	Cart getCartById(int cartId);
+
+    
+}

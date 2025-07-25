@@ -1,0 +1,49 @@
+package com.login.configuration;
+
+
+import com.login.service.CustomUserDetailsService;
+
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@SpringJUnitConfig
+@Import(SecurityConfig.class)
+public class SecurityConfigTest {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AuthenticationProvider authenticationProvider;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Test
+    void testPasswordEncoderBean() {
+        String rawPassword = "myPassword";
+        String encodedPassword = passwordEncoder.encode(rawPassword);
+
+        assertNotNull(encodedPassword);
+        assertTrue(passwordEncoder.matches(rawPassword, encodedPassword));
+    }
+
+    @Test
+    void testAuthenticationProviderBean() {
+        assertNotNull(authenticationProvider);
+        assertTrue(authenticationProvider.supports(org.springframework.security.authentication.UsernamePasswordAuthenticationToken.class));
+    }
+
+    @Test
+    void testAuthenticationManagerBean() {
+        assertNotNull(authenticationManager);
+    }
+}

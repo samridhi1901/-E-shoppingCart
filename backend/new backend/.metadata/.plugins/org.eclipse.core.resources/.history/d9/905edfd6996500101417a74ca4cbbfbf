@@ -1,0 +1,62 @@
+package com.cg.estore.orderservice.entitytests;
+
+import org.junit.jupiter.api.Test;
+
+import com.cg.estore.orderservice.entity.Cart;
+import com.cg.estore.orderservice.entity.OrderDetail;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.time.LocalDate;
+
+public class OrdersTests {
+
+    @Test
+    public void testParameterizedConstructor() {
+        String orderId = "O001";
+        LocalDate orderDate = LocalDate.now();
+        double totalPrice = 100.0;
+        String orderStatus = "Pending";
+        int quantity = 2;
+        String productName = "Product1";
+        Cart cart = new Cart();
+
+       // Orders orders = new Orders(orderId, orderDate, totalPrice, orderStatus, quantity, productName, cart);
+
+//        assertEquals(orderId, orders.getOrderId());
+//        assertEquals(orderDate, orders.getOrderDate());
+//        assertEquals(totalPrice, orders.getTotalPrice());
+//        assertEquals(orderStatus, orders.getOrderStatus());
+//        assertEquals(quantity, orders.getQuantity());
+//        assertEquals(productName, orders.getProductName());
+//        assertEquals(cart, orders.getCart());
+    }
+
+    @Test
+    public void testDefaultConstructor() {
+        OrderDetail orders = new OrderDetail();
+        assertNull(orders.getOrderId());
+        assertNull(orders.getOrderDate());
+        assertEquals(0.0, orders.getTotalPrice());
+        assertNull(orders.getOrderStatus());
+//        assertEquals(0, orders.getQuantity());
+//        assertNull(orders.getProductName());
+        assertNull(orders.getCart());
+    }
+
+    @Test
+    public void testOrderIdValidation() {
+        assertThrows(IllegalArgumentException.class, () -> {
+         //   Orders orders = new Orders("", LocalDate.now(), 100.0, "Pending", 2, "Product1", new Cart());
+        });
+    }
+
+    @Test
+    public void testTotalPriceValidation() {
+        assertThrows(IllegalArgumentException.class, () -> {
+          //  Orders orders = new Orders("O001", LocalDate.now(), -10.0, "Pending", 2, "Product1", new Cart());
+        });
+    }
+
+    // Additional tests for validation and specific scenarios
+}

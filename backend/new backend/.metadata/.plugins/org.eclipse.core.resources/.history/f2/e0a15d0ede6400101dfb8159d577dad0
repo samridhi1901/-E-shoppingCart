@@ -1,0 +1,138 @@
+package com.cg.estore.cartservice.controllertests;
+
+import com.cg.estore.cartservice.controller.CartController;
+import com.cg.estore.cartservice.entity.Cart;
+import com.cg.estore.cartservice.entity.Product;
+import com.cg.estore.cartservice.exception.CartNotFoundException;
+import com.cg.estore.cartservice.service.CartService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+
+import java.util.Collections;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+
+public class CartControllerTest {
+
+    @Mock
+    private CartService cartService;
+
+    @InjectMocks
+    private CartController cartController;
+
+    private Cart cart;
+    private Product product;
+
+    @BeforeEach
+    public void setup() {
+        cart = new Cart();
+        cart.setCartId("cart1");
+        cart.setProductId("product1");
+        cart.setQuantity(1);
+        cart.setProductName("Test Product");
+        cart.setTotalPrice(100.0);
+
+        product = new Product();
+        product.setProductId("product1");
+        product.setProductName("Test Product");
+        product.setTotalPrice(100.0);
+    }
+
+    @Test
+    public void testAddCartWithProduct() {
+        when(cartService.addProductToCart(anyString(), any(Cart.class), anyInt())).thenReturn(cart);
+
+        ResponseEntity<Cart> response = cartController.addCartWithProduct("product1", new Cart(), 1);
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(cart, response.getBody());
+    }
+
+    @Test
+    public void testGetAllCarts() {
+        when(cartService.getAllCarts()).thenReturn(Collections.singletonList(cart));
+
+        ResponseEntity<List<Cart>> response = cartController.getAllCarts();
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertFalse(response.getBody().isEmpty());
+    }
+
+    @Test
+    public void testGetCartById() {
+        when(cartService.getCartById("cart1")).thenReturn(cart);
+
+        ResponseEntity<Cart> response = cartController.getCartById("cart1");
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(cart, response.getBody());
+    }
+
+    @Test
+    public void testGetCartById_NotFound() {
+        when(cartService.getCartById("cart1")).thenReturn(null);
+
+        ResponseEntity<Cart> response = cartController.getCartById("cart1");
+        assertNotNull(response);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void testUpdateCart() {
+        when(cartService.updateCart(any(Cart.class))).thenReturn(cart);
+
+        ResponseEntity<Cart> response = cartController.updateCart("cart1", cart);
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(cart, response.getBody());
+    }
+
+    @Test
+    public void testUpdateCart_NotFound() {
+        when(cartService.updateCart(any(Cart.class))).thenReturn(null);
+
+        ResponseEntity<Cart> response = cartController.updateCart("cart1", cart);
+        assertNotNull(response);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void testCartTotal() {
+        when(cartService.cartTotal("cart1")).thenReturn(100.0);
+
+        ResponseEntity<Double> response = cartController.cartTotal("cart1");
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(100.0, response.getBody());
+    }
+
+    @Test
+    public void testDeleteProductFromCart() {
+        doNothing().when(cartService).deleteProductFromCart("cart1");
+
+        ResponseEntity<String> response = cartController.deleteProductFromCart("cart1");
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Cart item deleted successfully.", response.getBody());
+    }
+
+    @Test
+    public void testDeleteProductFromCart_NotFound() {
+        doThrow(new CartNotFoundException("Cart not found with ID: cart1")).when(cartService).deleteProductFromCart("cart1");
+
+        ResponseEntity<String> response = cartController.deleteProductFromCart("cart1");
+        assertNotNull(response);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals("Cart not found with ID: cart1", response.getBody());
+    }
+}

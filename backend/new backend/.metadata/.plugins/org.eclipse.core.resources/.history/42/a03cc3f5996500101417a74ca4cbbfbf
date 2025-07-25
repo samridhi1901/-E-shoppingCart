@@ -1,0 +1,49 @@
+package com.cg.estore.orderservice.entitytests;
+
+import org.junit.jupiter.api.Test;
+
+import com.cg.estore.orderservice.entity.Address;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class AddressTests {
+
+    @Test
+    public void testParameterizedConstructor() {
+        String customerID = "123";
+        String addressId = "A001";
+        String fullName = "John Doe";
+        String mobileNumber = "1234567890";
+        int flatNumber = 101;
+        String streetName="VNR Street";
+        String city = "ExampleCity";
+        int pincode = 123456;
+        String state = "ExampleState";
+
+        Address address = new Address( addressId, fullName, mobileNumber, flatNumber,streetName, city, pincode, state);
+
+        
+        assertEquals(addressId, address.getAddressId());
+        assertEquals(fullName, address.getFullName());
+        assertEquals(mobileNumber, address.getMobileNumber());
+        assertEquals(flatNumber, address.getFlatNumber());
+        assertEquals(city, address.getCity());
+        assertEquals(pincode, address.getPincode());
+        assertEquals(state, address.getState());
+    }
+
+    @Test
+    public void testDefaultConstructor() {
+        Address address = new Address();
+       
+        assertNull(address.getAddressId());
+        assertNull(address.getFullName());
+        assertNull(address.getMobileNumber());
+        assertEquals(0, address.getFlatNumber());
+        assertNull(address.getCity());
+        assertEquals(0, address.getPincode());
+        assertNull(address.getState());
+    }
+
+}  
+

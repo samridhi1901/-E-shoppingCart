@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Estore</title>
+    <link rel="stylesheet" href="register.component.css">
+</head>
+<body>
+    <div class="signup-container">
+        <div class="image-side">
+            <img src="https://deltasys.com/wp-content/uploads/2017/06/ecommerce.jpg" alt="Register Image">
+        </div>
+        <div class="form-side">
+            <div class="form-wrapper">
+                <header class="form-header">
+                    <h1>Create an Account</h1>
+                </header>
+                <form [formGroup]="userForms" (ngSubmit)="submitHandler()" class="signup-form">
+
+                  <!-- Full Name -->
+                  <div class="form-group">
+                    <input type="text" placeholder="Full Name" formControlName="fullName" class="form-input" />
+                    <div *ngIf="userForms.get('fullName')?.invalid && userForms.get('fullName')?.touched" class="error-message">
+                      Full name is required and must contain only letters.
+                    </div>
+                  </div>
+                
+                  <!-- Email -->
+                  <div class="form-group">
+                    <input type="email" placeholder="Email" formControlName="emailId" class="form-input" />
+                    <div *ngIf="userForms.get('emailId')?.invalid && userForms.get('emailId')?.touched" class="error-message">
+                      Please enter a valid email address.
+                    </div>
+                  </div>
+                
+                  <!-- Password -->
+                  <div class="form-group">
+                    <input type="password" placeholder="Password" formControlName="password" class="form-input" />
+                    <div *ngIf="userForms.get('password')?.invalid && userForms.get('password')?.touched" class="error-message">
+                      Password must be at least 8 characters and include uppercase, lowercase, number, and special character.
+                    </div>
+                  </div>
+                
+                  <!-- Mobile Number -->
+                  <div class="form-group">
+                    <input type="text" placeholder="Mobile Number" formControlName="mobileNumber" class="form-input" />
+                    <div *ngIf="userForms.get('mobileNumber')?.invalid && userForms.get('mobileNumber')?.touched" class="error-message">
+                      Mobile number must be a 10-digit number.
+                    </div>
+                  </div>
+                
+                  <!-- Gender -->
+                  <div class="form-group">
+                    <input type="text" placeholder="Gender" formControlName="gender" class="form-input" />
+                    <div *ngIf="userForms.get('gender')?.invalid && userForms.get('gender')?.touched" class="error-message">
+                      Gender must be Male, Female, or Other.
+                    </div>
+                  </div>
+                
+                  <!-- Image -->
+                  <div class="form-group">
+                    <input type="text" placeholder="Image URL or Filename" formControlName="image" class="form-input" />
+                  </div>
+                
+                  <!-- Submit Button -->
+                  <button class="submit-button" type="submit">Sign Up</button>
+                
+                </form>
+                
+                
+                  
+
+                <div class="form-links">
+                    <a routerLink="/login">Already have an account? Sign In</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

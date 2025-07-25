@@ -1,0 +1,90 @@
+<div class="product-management">
+  <h2>Product Management</h2>
+ 
+  <!-- Navigation Section -->
+  <div class="nav-buttons">
+    <button (click)="showSection('add')">Add New Product</button>
+    <button (click)="showSection('list')">View All Products</button>
+  </div>
+ 
+  <!-- Add Product Section -->
+  <div *ngIf="currentSection === 'add'">
+    <h3>{{ editMode ? 'Edit Product' : 'Add New Product' }}</h3>
+    <form [formGroup]="productForm" (ngSubmit)="editMode ? handleUpdateProduct() : handleAddProduct()">
+      <div>
+        <label for="productName">Name:</label>
+        <input formControlName="productName" id="productName" type="text">
+      </div>
+      <div>
+        <label for="productType">Type:</label>
+        <input formControlName="productType" id="productType" type="text">
+      </div>
+      <div>
+        <label for="category">Category:</label>
+        <input formControlName="category" id="category" type="text">
+      </div>
+      <div>
+        <label for="description">Description:</label>
+        <input formControlName="description" id="description" type="text">
+      </div>
+      <div>
+        <label for="totalPrice">Price:</label>
+        <input formControlName="totalPrice" id="totalPrice" type="number">
+      </div>
+      <div>
+        <label for="image">Image URL:</label>
+        <input formControlName="image" id="image" type="text">
+      </div>
+      <div>
+        <label for="quantity">Quantity:</label>
+        <input formControlName="quantity" id="quantity" type="number">
+      </div>
+      <button type="submit" [disabled]="productForm.invalid">{{ editMode ? 'Update Product' : 'Add Product' }}</button>
+      <button type="button" *ngIf="editMode" (click)="handleCancelEdit()">Cancel</button>
+    </form>
+  </div>
+ 
+ <!-- List Products Section -->
+<div *ngIf="currentSection === 'list'" class="product-list-section">
+  <h3>All Products</h3>
+  <ul class="product-list">
+    <li *ngFor="let product of productsToDisplay" class="product-item">
+      <div class="product-details">
+        <img
+          *ngIf="product.image"
+          [src]="product.image"
+          [alt]="product.productName"
+          class="product-image"
+        />
+ 
+        <div class="product-info">
+          <h4 class="product-name">{{ product.productName }}</h4>
+          <p class="product-description">{{ product.description }}</p>
+          <p class="product-price">
+            Price: {{ product.totalPrice | currency : 'INR' }}
+          </p>
+          <p class="product-quantity">
+            Quantity: {{ product.quantity }}
+          </p>
+        </div>
+ 
+        <div class="product-actions">
+          <button
+            (click)="handleEditProduct(product)"
+            class="edit-button"
+          >
+            Edit
+          </button>
+          <button
+            (click)="handleDeleteProduct(product.productId)"
+            class="delete-button"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+ 
+ 

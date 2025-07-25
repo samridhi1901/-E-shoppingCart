@@ -1,0 +1,21 @@
+package com.cg.estore.cartservice.exception;
+
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import org.springframework.http.HttpStatus;
+
+// Global exception handler to handle exceptions across controllers
+@ControllerAdvice
+public class GlobalExceptionHandler {
+
+    // Exception handling method for CartNotFoundException
+    @ExceptionHandler(CartNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public String handleCartNotFoundException(CartNotFoundException e) {
+        return e.getMessage();
+    }
+}

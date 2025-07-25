@@ -1,0 +1,5 @@
+package com.cg.estore.paymentservice.exception;
+
+public class GlobalExceptionHandler {
+
+}

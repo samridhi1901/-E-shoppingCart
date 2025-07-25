@@ -1,0 +1,36 @@
+//package com.cg.estore.cartservice.controller;
+//
+//import org.springframework.context.annotation.Bean;
+//import org.springframework.context.annotation.Configuration;
+//import org.springframework.web.cors.CorsConfiguration;
+//import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+//import org.springframework.web.filter.CorsFilter;
+//
+//@Configuration
+//public class CorsConfig {
+//
+//    // Configuring a CorsFilter bean to enable Cross-Origin Resource Sharing (CORS)
+//    @Bean
+//    public CorsFilter corsFilter() {
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        CorsConfiguration config = new CorsConfiguration();
+//
+//        // Allowing credentials (e.g., cookies) to be included in the CORS request
+//        config.setAllowCredentials(true);
+//
+//        // Allowing requests from a specific origin (http://localhost:3000)
+//        config.addAllowedOrigin("http://localhost:4200");
+//
+//        // Allowing all headers in the CORS request
+//        config.addAllowedHeader("*");
+//
+//        // Allowing all HTTP methods in the CORS request
+//        config.addAllowedMethod("*");
+//
+//        // Registering the CORS configuration for all paths
+//        source.registerCorsConfiguration("/**", config);
+//
+//        // Creating and returning a CorsFilter using the configured source
+//        return new CorsFilter(source);
+//    }
+//}

@@ -1,0 +1,16 @@
+.custom-search-btn {
+  background-color: palevioletred; /* Indigo */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+ 
+.custom-search-btn:hover {
+  background-color: purple; /* Slightly darker indigo */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+ 
+ 

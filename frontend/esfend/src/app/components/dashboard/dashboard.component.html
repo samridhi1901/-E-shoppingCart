@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+ 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome User!</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="dashboard.component.css">
+</head>
+ 
+<body>
+    <div class="page-wrapper">
+      <!-- MENU SIDEBAR -->
+<aside class="menu-sidebar shadow-lg bg-white rounded-2xl p-4 w-64 min-h-screen border-r border-gray-200">
+    <!-- Inside your sidebar or navbar -->
+<div class="logo-wrapper">
+  <div class="logo-inner text-center">
+    <img
+      src="https://static.vecteezy.com/system/resources/previews/009/157/893/original/shopping-cart-set-of-shopping-cart-icon-on-white-background-shopping-cart-icon-shopping-cart-design-shopping-cart-icon-sign-shopping-cart-icon-isolated-shopping-cart-symbol-free-vector.jpg"
+      alt="Estore Logo"
+      class="brand-logo"
+    />
+    <h4 class="brand-name">Estore</h4>
+  </div>
+</div>
+ 
+ 
+    <nav class="sidebar-nav">
+        <app-product-category-menu
+            (categorySelected)="productListComponent.onCategorySelected($event)">
+        </app-product-category-menu>
+    </nav>
+</aside>
+<!-- END MENU SIDEBAR -->
+ 
+        <!-- PAGE CONTAINER -->
+        <div class="page-container">
+            <!-- HEADER DESKTOP -->
+            <header class="header-desktop">
+                <div class="container-fluid">
+                    <div class="header-wrap">
+                        <app-search (searchEvent)="productListComponent.handleSearchProducts($event)"></app-search>
+ 
+                        <!-- No need to change your buttons -->
+<div class="header-buttons">
+  <button routerLink="/cart-details" class="btn header-btn">
+    <i class="fas fa-shopping-cart"></i> Cart
+  </button>
+  <button routerLink="/orderhistory" class="btn header-btn">
+    <i class="fas fa-box"></i> My Orders
+  </button>
+  <button (click)="logOut()" class="btn header-btn">
+    <i class="fas fa-sign-out-alt"></i> Log Out
+  </button>
+</div>
+ 
+                    </div>
+                </div>
+            </header>
+            <!-- END HEADER DESKTOP -->
+ 
+            <main class="main-content">
+                <app-product-list #productListComponent></app-product-list>
+                <router-outlet></router-outlet>
+            </main>
+        </div>
+        <!-- END PAGE CONTAINER -->
+    </div>
+ 
+    <!-- FOOTER -->
+    <footer>
+        <ul class="footer-links">
+            <li><a routerLink="/home">About Us</a></li>
+            <li><a routerLink="/home">Contact Us</a></li>
+            <li><a routerLink="/home">Help</a></li>
+        </ul>
+    </footer>
+    <!-- END FOOTER -->
+</body>
+ 
+</html>
+ 
+ 

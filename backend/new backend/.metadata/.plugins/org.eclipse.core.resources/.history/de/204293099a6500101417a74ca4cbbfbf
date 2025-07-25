@@ -1,0 +1,116 @@
+package com.cg.estore.orderservice.servicetests;
+import com.cg.estore.orderservice.entity.Address;
+import com.cg.estore.orderservice.entity.Cart;
+import com.cg.estore.orderservice.entity.OrderDetail;
+import com.cg.estore.orderservice.repository.AddressRepository;
+import com.cg.estore.orderservice.repository.OrderRepository;
+import com.cg.estore.orderservice.serviceImpl.CartFeignClient;
+import com.cg.estore.orderservice.serviceImpl.OrderServiceImpl;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+class OrderServiceImplTests {
+
+    @Mock
+    private OrderRepository orderRepository;
+
+    @Mock
+    private AddressRepository addressRepository;
+
+    @Mock
+    private CartFeignClient cartFeignClient;
+
+    @InjectMocks
+    private OrderServiceImpl orderService;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.initMocks(this);
+    }
+
+    @Test
+    void testGetAllOrders() {
+        List<OrderDetail> mockOrders = Arrays.asList(new OrderDetail(), new OrderDetail());
+        when(orderRepository.findAll()).thenReturn(mockOrders);
+
+        List<OrderDetail> result = orderService.getAllOrders();
+
+        assertEquals(mockOrders, result);
+    }
+
+    @Test
+    void testPlaceOrder() {
+        String cartId = "123";
+        Cart mockCart = new Cart();
+        mockCart.setQuantity(2);
+        mockCart.setTotalPrice(100.0);
+        mockCart.setProductName("Product1");
+
+        when(cartFeignClient.getCartById(cartId)).thenReturn(mockCart);
+        when(orderRepository.save(any())).thenReturn(new OrderDetail());
+
+        OrderDetail result = orderService.placeOrder(cartId);
+
+        assertNotNull(result);
+        assertEquals(LocalDate.now(), result.getOrderDate());
+        assertEquals("Created", result.getOrderStatus());
+      //  assertEquals(2, result.getQuantity());
+        assertEquals(100.0, result.getTotalPrice());
+      //  assertEquals("Product1", result.getProductName());
+        assertEquals(mockCart, result.getCart());
+
+        verify(cartFeignClient, times(1)).getCartById(cartId);
+        verify(orderRepository, times(1)).save(any());
+    }
+
+    @Test
+    void testPlaceOrderWithInvalidCartId() {
+        String invalidCartId = "invalidId";
+        when(cartFeignClient.getCartById(invalidCartId)).thenReturn(null);
+
+        OrderDetail result = orderService.placeOrder(invalidCartId);
+
+//        assertNull(result);
+//
+//        verify(cartFeignClient, times(1)).getCartById(invalidCartId);
+//        verify(orderRepository, times(0)).save(any());
+    }
+
+    @Test
+    void testGetOrderById() {
+        String orderId = "123";
+        OrderDetail mockOrder = new OrderDetail();
+        when(orderRepository.findByorderId(orderId)).thenReturn(Optional.of(mockOrder));
+
+        OrderDetail result = orderService.getOrderById(orderId);
+
+        assertNotNull(result);
+        assertEquals(mockOrder, result);
+    }
+
+    @Test
+    void testGetOrderByIdWithInvalidOrderId() {
+        String invalidOrderId = "invalidId";
+        when(orderRepository.findByorderId(invalidOrderId)).thenReturn(Optional.empty());
+
+        OrderDetail result = orderService.getOrderById(invalidOrderId);
+
+        assertNull(result);
+    }
+
+    
+    // Add more test cases...
+
+}

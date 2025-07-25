@@ -1,0 +1,34 @@
+package com.cg.estore.productservice.repository;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+
+import com.cg.estore.productservice.entity.Product;
+
+
+public interface ProductRepository extends JpaRepository<Product, String>{
+   
+
+    
+	List<Product> findByProductName(String productName);
+
+
+    public List<Product> findByCategory(String category);
+
+    public List<Product> findByProductType(String productType);
+
+
+	public void deleteByProductId(String productId);
+
+
+	public Optional<Product> findByProductId(String productId);
+
+
+
+
+
+}

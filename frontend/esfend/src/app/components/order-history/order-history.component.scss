@@ -1,0 +1,54 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  thead {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+  thead th {
+    padding: 15px;
+    text-align: left;
+    font-weight: bold;
+    border-bottom: 2px solid #0056b3;
+  }
+  
+  tbody tr {
+    border-bottom: 1px solid #ddd;
+  }
+  
+  tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  tbody td {
+    padding: 12px;
+    text-align: left;
+  }
+  
+  /* Hover effect */
+  tbody tr:hover {
+    background-color: #e1eaff;
+  }
+  
+  /* Currency styling */
+  .currency {
+    color: #28a745;
+    font-weight: bold;
+  }
+  
+  /* Actions button styling */
+  .action-button {
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+  
+  

@@ -1,0 +1,43 @@
+package com.cg.estore.orderservice.entitytests;
+import org.junit.jupiter.api.Test;
+
+import com.cg.estore.orderservice.entity.Product;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class ProductTests {
+
+    @Test
+    public void testParameterizedConstructor() {
+        String productId = "P001";
+        String productName = "TestProduct";
+
+        Product product = new Product(productId, productName);
+
+        assertEquals(productId, product.getProductId());
+        assertEquals(productName, product.getProductName());
+    }
+
+    @Test
+    public void testDefaultConstructor() {
+        Product product = new Product();
+        assertNull(product.getProductId());
+        assertNull(product.getProductName());
+    }
+
+    @Test
+    public void testProductIdValidation() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            Product product = new Product("", "TestProduct");
+        });
+    }
+
+    @Test
+    public void testProductNameValidation() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            Product product = new Product("P001", "");
+        });
+    }
+
+    // Additional tests for validation and specific scenarios
+}

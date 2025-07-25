@@ -1,0 +1,48 @@
+/* CSS Styling */
+.menu-sidebar-content {
+    width: 250px; /* Adjust width as needed */
+    background-color: white; /* Light grey background */
+    border-right: 1px solid #ddd; /* Light border */
+    height: 100vh; /* Full height */
+    overflow-y: auto; /* Scrollbar for overflow */
+    padding: 10px; /* Padding inside sidebar */
+  }
+ 
+  .navbar-sidebar {
+    padding: 0;
+    margin: 0;
+  }
+ 
+  .navbar-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+ 
+  .navbar-list li {
+    margin-bottom: 10px; /* Space between items */
+  }
+ 
+  .category-btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background-color:black; /* White background */
+    color:white; /* Dark text color */
+    text-align: left;
+    font-size: 16px; /* Font size */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s, color 0.3s;
+    cursor: pointer; /* Pointer cursor on hover */
+  }
+ 
+  .category-btn:hover {
+    background-color: palevioletred; /* Blue background on hover */
+    color: #fff; /* White text color on hover */
+  }
+ 
+  .category-btn:focus {
+    outline: none; /* Remove default focus outline */
+  }
+ 
+ 

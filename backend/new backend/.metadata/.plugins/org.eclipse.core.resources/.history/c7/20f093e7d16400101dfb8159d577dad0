@@ -1,0 +1,194 @@
+package com.login.service;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.login.dto.AuthDto;
+import com.login.dto.userDto;
+import com.login.exception.InvalidCredentialException;
+import com.login.exception.UserAlreadyPresentException;
+import com.login.model.User;
+import com.login.repository.UserRepository;
+import com.login.security.Jwtutil;
+
+@ExtendWith(MockitoExtension.class)
+public class UserServiceTest {
+
+    @Mock private UserRepository userRepository;
+    @Mock private PasswordEncoder passwordEncoder;
+    @Mock private AuthenticationManager authenticationManager;
+    @Mock private Jwtutil jwtutil;
+
+    @InjectMocks private UserServiceImpl userService;
+
+    @Test
+    public void testRegisterUser_Success() throws UserAlreadyPresentException {
+        when(userRepository.findAll()).thenReturn(Collections.emptyList());
+        when(userRepository.save(any(User.class))).thenReturn(new User());
+
+        User user = new User();
+        user.setFullName("TestUser");
+        user.setEmailId("test@example.com");
+        user.setPassword("password");
+
+        boolean result = userService.registerUser(user);
+
+        assertTrue(result);
+        verify(userRepository, times(1)).save(any(User.class));
+    }
+
+    @Test
+    public void testRegisterUser_UserAlreadyPresent() {
+        User existingUser = new User();
+        existingUser.setEmailId("test@example.com");
+        when(userRepository.findAll()).thenReturn(Arrays.asList(existingUser));
+
+        User user = new User();
+        user.setFullName("TestUser");
+        user.setEmailId("test@example.com");
+        user.setPassword("password");
+
+        assertThrows(UserAlreadyPresentException.class, () -> {
+            userService.registerUser(user);
+        });
+    }
+
+    @Test
+    public void testGenerateUniqueRandomId() {
+        when(userRepository.findById(anyString())).thenReturn(Optional.empty());
+
+        String id = userService.genrateUniqueRandomId();
+
+        assertNotNull(id);
+        assertTrue(id.matches("\\d{1,6}"));
+    }
+
+    @Test
+    public void testLogin_Success() throws InvalidCredentialException {
+        Authentication mockAuthentication = mock(Authentication.class);
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn(mockAuthentication);
+
+        User user = new User();
+        user.setProfileId("1");
+        user.setFullName("TestUser");
+        user.setEmailId("test@example.com");
+        user.setPassword("encodedPassword");
+        user.setRole("ROLE_USER");
+
+        when(userRepository.findByfullNameOrEmailId(anyString(), anyString())).thenReturn(user);
+        when(jwtutil.generateToken(anyString(), anyString(), anyString(), anyString()))
+                .thenReturn("mocked_jwt_token");
+
+        AuthDto authDto = new AuthDto();
+        authDto.setEmail("test@example.com");
+        authDto.setPassword("password");
+
+        userDto response = userService.login(authDto);
+
+        assertNotNull(response);
+        assertEquals("mocked_jwt_token", response.getAccessToken());
+        assertEquals("TestUser", response.getUsername());
+        assertEquals("1", response.getUserId());
+        assertEquals("ROLE_USER", response.getRole());
+    }
+
+    @Test
+    public void testLogin_InvalidCredentials() {
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenThrow(BadCredentialsException.class);
+
+        AuthDto authDto = new AuthDto();
+        authDto.setEmail("testuser");
+        authDto.setPassword("wrongpass");
+
+        assertThrows(InvalidCredentialException.class, () -> {
+            userService.login(authDto);
+        });
+    }
+
+    @Test
+    public void testGetAllProfiles() {
+        List<User> users = Arrays.asList(new User(), new User());
+        when(userRepository.findAll()).thenReturn(users);
+
+        List<User> result = userService.getAllProfiles();
+        assertEquals(2, result.size());
+    }
+
+    @Test
+    public void testGetByProfileId() {
+        User user = new User();
+        user.setProfileId("123");
+
+        when(userRepository.findByProfileId("123")).thenReturn(user);
+
+        User result = userService.getByProfileId("123");
+        assertNotNull(result);
+        assertEquals("123", result.getProfileId());
+    }
+
+    @Test
+    public void testFindByMobileNumber() {
+        User user = new User();
+        user.setMobileNumber(9876543210L);
+
+        when(userRepository.findByMobileNumber(9876543210L)).thenReturn(user);
+
+        User result = userService.findByMobileNumber(9876543210L);
+        assertNotNull(result);
+        assertEquals(9876543210L, result.getMobileNumber());
+    }
+
+    @Test
+    public void testDeleteProfile() {
+        doNothing().when(userRepository).deleteByProfileId("123");
+
+        userService.deleteProfile("123");
+
+        verify(userRepository, times(1)).deleteByProfileId("123");
+    }
+
+    @Test
+    public void testUpdateProfile() {
+        User user = new User();
+        user.setProfileId("999");
+
+        when(userRepository.save(user)).thenReturn(user);
+
+        userService.updateProfile(user);
+
+        verify(userRepository, times(1)).save(user);
+    }
+
+    @Test
+    public void testGetByFullName() {
+        User user = new User();
+        user.setFullName("John Doe");
+
+        when(userRepository.findByFullName("John Doe")).thenReturn(user);
+
+        User result = userService.getByFullName("John Doe");
+
+        assertNotNull(result);
+        assertEquals("John Doe", result.getFullName());
+    }
+}
